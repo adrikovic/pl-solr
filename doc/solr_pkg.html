@@ -1,0 +1,399 @@
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<TITLE>PL/Solr API Dokumentation</TITLE>
+<LINK TITLE="Style" HREF="stylesheet.css" TYPE="text/css" REL="stylesheet">
+</HEAD>
+<BODY BGCOLOR="white">
+<TABLE CELLSPACING="0" CELLPADDING="1" WIDTH="100%" BORDER="0">
+<TR>
+<TD CLASS="NavBarRow1" COLSPAN="2">
+<TABLE CELLSPACING="3" CELLPADDING="0" BORDER="0">
+<TR VALIGN="top" ALIGN="center">
+<TD CLASS="NavBarRow1"><A HREF="summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="index-files/index-1.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A> &nbsp;</TD>
+</TR>
+</TABLE>
+</TD><TD rowspan="3" VALIGN="top" ALIGN="right"><EM><b>PL/Solr API Dokumentation</b></EM></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow2">
+     &nbsp;&nbsp;
+    </TD><TD CLASS="NavBarRow2"><FONT SIZE="-2"><A TARGET="_top" HREF="index.html"><B>FRAMES</B></A> &nbsp;&nbsp;
+      <A TARGET="_top" HREF="index-noframes.html"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+      SUMMARY:  <A HREF="#field_summary">FIELD</A> | <A HREF="#type_summary">TYPE</A> | <A HREF="#method_summary">METHOD</A></FONT></TD><TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+    DETAIL:  <A HREF="#field_detail">FIELD</A> | <A HREF="#type_detail">TYPE</A> | <A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<HR>
+<H2>
+<FONT SIZE="-1"></FONT>
+<BR>
+    Package  SOLR_PKG</H2>
+<P> <ul>
+ <li>Package fuer die Aufbereitung und Syntaxcheck der Suchanfrage, Filter und Facets</li>
+ <li>Verantwortlich fuer die Kommunikation mit Apache Solr und Parsing des XML Antwortdokumentes</li>
+ <li>Extrahiert Primaerschluesselliste oder Facetliste aus Apache Solrs XML Antwortdokument in eine PL/SQL Tabelle</li>
+ <li>Benutzbar in SQL und in PL/SQL</li>
+ </ul><br />
+ Beispiel fuer Extrahierung Primaerschluesselliste
+ <pre>SELECT
+   *
+ FROM
+   TABLE(
+     SOLR_PKG.EXTRACT_RESULTS(
+       RESULTSET => SOLR_PKG.SEARCH(
+                      QUERY_CLAUSE => SOLR_PKG.BUILD_QUERY('h*'),
+                      FILTER_CLAUSE => SOLR_PKG.BUILD_FILTER('artikel_packeinheit','10'),
+                      FACET_CLAUSE => SOLR_PKG.BUILD_FACET('artikel_hersteller')
+                    )
+       )
+   )</pre>
+ Beispiel fuer Extrahierung Facetliste
+ <pre>SELECT
+   *
+ FROM
+   TABLE(
+     SOLR_PKG.EXTRACT_FACET(
+       RESULTSET => SOLR_PKG.SEARCH(
+                      QUERY_CLAUSE => SOLR_PKG.BUILD_QUERY('h*'),
+                      FILTER_CLAUSE => SOLR_PKG.BUILD_FILTER('artikel_packeinheit','10'),
+                      FACET_CLAUSE => SOLR_PKG.BUILD_FACET('artikel_hersteller')
+                    ),
+       FACET_FIELD => 'artikel_hersteller'
+     )
+   )</pre>
+</P>
+<HR>
+<P></P>
+<A NAME="field_summary"></A><A NAME="type_summary"></A><A NAME="method_summary"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="2"><FONT SIZE="+2"><B>Method Summary</B></FONT></TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;VARCHAR2</CODE></FONT></TD><TD><CODE><B><A HREF="#build_facet(varchar2)">BUILD_FACET</A></B>(field_name VARCHAR2)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Aufbereitung Facet Klausel fuer Dokumentefeld
+ <pre> SELECT
+   SOLR_PKG.BUILD_FACET('artikel_hersteller')
+ FROM DUAL</pre>
+ erzeugt <pre>* facet.field=artikel_hersteller&</pre>
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;VARCHAR2</CODE></FONT></TD><TD><CODE><B><A HREF="#build_filter(varchar2,varchar2)">BUILD_FILTER</A></B>(field_name VARCHAR2, field_value VARCHAR2)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Aufbereitung Filter Klausel fuer Suchanfrage
+ <pre> SQL> SELECT
+   SOLR_PKG.BUILD_FILTER('artikel_hersteller','Oracle')
+ FROM DUAL;<pre />
+ erzeugt <pre>fq=+artikel_hersteller:"Oracle"&<pre />
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;VARCHAR2</CODE></FONT></TD><TD><CODE><B><A HREF="#build_query(varchar2)">BUILD_QUERY</A></B>(user_query VARCHAR2)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Raw Suchanfrage Syntaxcheck und Aufbereitung
+ <pre>  SELECT
+   SOLR_PKG.BUILD_QUERY('artikel_name:blei* AND artikel_preis:[10 TO 100]')
+   FROM DUAL<pre />
+ erzeugt <pre>q=artikel_name:blei*%20AND%20artikel_preis:[10%20TO%20100]&<pre />
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;SOLR_FACET_ROW_LIST</CODE></FONT></TD><TD><CODE><B><A HREF="#extract_facet(xmltype,varchar2)">EXTRACT_FACET</A></B>(resultset XMLTYPE, facet_field VARCHAR2)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Facet zu Dokumentenfeld aus Apache Solr XML Antwortdokument extrahieren
+ <pre> SELECT
+   *
+ FROM
+   TABLE(
+     SOLR_PKG.EXTRACT_FACET(
+       :XML_DOC
+     )
+   )</pre>
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;SOLR_RESULT_ROW_LIST</CODE></FONT></TD><TD><CODE><B><A HREF="#extract_results(xmltype)">EXTRACT_RESULTS</A></B>(resultset XMLTYPE)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Primaerschluesselliste aus Apache Solr XML Antwortdokument extrahieren
+ <pre> SELECT
+   *
+ FROM
+   TABLE(
+     SOLR_PKG.EXTRACT_RESULTS(
+       :XML_DOC
+       )
+   )</pre>
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;XMLTYPE</CODE></FONT></TD><TD><CODE><B><A HREF="#search(varchar2,varchar2,varchar2)">SEARCH</A></B>(query_clause VARCHAR2, filter_clause VARCHAR2 DEFAULT NULL, facet_clause VARCHAR2 DEFAULT NULL)</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Suchanfrage aus QUERY_CLAUSE, FILTER_CLAUSE und FACET_CLAUSE zusammensetzen und Suche ueber Apache Solr durchfuehren
+ <pre> DELCARE
+   XML_DOC XMLTYPE;
+ BEGIN
+   XML_DOC := SOLR_PKG.SEARCH(
+                QUERY_CLAUSE => SOLR_PKG.BUILD_QUERY('h*'),
+                FILTER_CLAUSE => SOLR_PKG.BUILD_FILTER('artikel_packeinheit','10'),
+                FACET_CLAUSE => SOLR_PKG.BUILD_FACET('artikel_hersteller')
+              )
+ END;</pre>
+</TD>
+</TR>
+</TABLE>
+<P></P>
+<A NAME="field_detail"></A><A NAME="type_detail"></A><A NAME="method_detail"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="1"><FONT SIZE="+2"><B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+<A NAME="build_query(varchar2)"></A>
+<H3>BUILD_QUERY</H3>
+<PRE>
+  public VARCHAR2 <B>BUILD_QUERY</B>(user_query VARCHAR2)</PRE>
+<DL>
+<DD> Raw Suchanfrage Syntaxcheck und Aufbereitung
+ <pre>  SELECT
+   SOLR_PKG.BUILD_QUERY('artikel_name:blei* AND artikel_preis:[10 TO 100]')
+   FROM DUAL<pre />
+ erzeugt <pre>q=artikel_name:blei*%20AND%20artikel_preis:[10%20TO%20100]&<pre />
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>user_query</CODE> -
+              Die Suchanfrage in <a target="_blank" href="http://wiki.apache.org/solr/SolrQuerySyntax">Apache Solr Query Syntax</a></DD>
+</DT>
+<DT>
+<B>Returns:</B>
+<DD>VARCHAR2 Die transformierte Suchanfrage enkodiert nach <a target="_blank" href="http://tools.ietf.org/html/rfc3986#section-2">RFC 3986</a></DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="build_filter(varchar2,varchar2)"></A>
+<H3>BUILD_FILTER</H3>
+<PRE>
+  public VARCHAR2 <B>BUILD_FILTER</B>(field_name VARCHAR2, <BR>                               field_value VARCHAR2)</PRE>
+<DL>
+<DD> Aufbereitung Filter Klausel fuer Suchanfrage
+ <pre> SQL> SELECT
+   SOLR_PKG.BUILD_FILTER('artikel_hersteller','Oracle')
+ FROM DUAL;<pre />
+ erzeugt <pre>fq=+artikel_hersteller:"Oracle"&<pre />
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>field_name</CODE> -
+              Das Dokumentenfeld</DD>
+<DD>
+<CODE>field_value</CODE> -
+              Der zu filterne Feldert in field_name</DD>
+</DT>
+<DT>
+<B>Returns:</B>
+<DD>Die transformierte Filter Klausel enkodiert nach <a target="_blank" href="http://tools.ietf.org/html/rfc3986#section-2">RFC 3986</a>
+ Suchanfrage kann ueber Hilfsfunktion <a target="_blank" href="solr_pkg.html#build_query(varchar2)">BUILD_QUERY</a> erstellt werden</DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="build_facet(varchar2)"></A>
+<H3>BUILD_FACET</H3>
+<PRE>
+  public VARCHAR2 <B>BUILD_FACET</B>(field_name VARCHAR2)</PRE>
+<DL>
+<DD> Aufbereitung Facet Klausel fuer Dokumentefeld
+ <pre> SELECT
+   SOLR_PKG.BUILD_FACET('artikel_hersteller')
+ FROM DUAL</pre>
+ erzeugt <pre>* facet.field=artikel_hersteller&</pre>
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>field_name</CODE> -
+              Das Dokumentenfeld</DD>
+</DT>
+<DT>
+<B>Returns:</B>
+<DD>Die transformierte Facet Klausel enkodiert nach <a target="_blank" href="http://tools.ietf.org/html/rfc3986#section-2">RFC 3986</a></DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="search(varchar2,varchar2,varchar2)"></A>
+<H3>SEARCH</H3>
+<PRE>
+  public XMLTYPE <B>SEARCH</B>(query_clause VARCHAR2, <BR>                        filter_clause VARCHAR2 DEFAULT NULL, <BR>                        facet_clause VARCHAR2 DEFAULT NULL)</PRE>
+<DL>
+<DD> Suchanfrage aus QUERY_CLAUSE, FILTER_CLAUSE und FACET_CLAUSE zusammensetzen und Suche ueber Apache Solr durchfuehren
+ <pre> DELCARE
+   XML_DOC XMLTYPE;
+ BEGIN
+   XML_DOC := SOLR_PKG.SEARCH(
+                QUERY_CLAUSE => SOLR_PKG.BUILD_QUERY('h*'),
+                FILTER_CLAUSE => SOLR_PKG.BUILD_FILTER('artikel_packeinheit','10'),
+                FACET_CLAUSE => SOLR_PKG.BUILD_FACET('artikel_hersteller')
+              )
+ END;</pre>
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>query_clause</CODE> -
+              Suchanfrage in <a target="_blank"http://wiki.apache.org/solr/SolrQuerySyntax">Apache Solr Query Syntax</a>.
+ Suchanfrage kann ueber Hilfsfunktion <a target="_blank" href="solr_pkg.html#build_query(varchar2)">BUILD_QUERY</a> erstellt werden.</DD>
+<DD>
+<CODE>filter_clause</CODE> -
+              Filter Klausel entsprechend der Apache Solr Query Syntax.
+ Klausel kann ueber Hilfsfunktion <a target="_blank" href="solr_pkg.html#build_filter(varchar2,varchar2)">BUILD_FILTER</a> erstellt werden.</DD>
+<DD>
+<CODE>facet_clause</CODE> -
+              Facet Klausel entsprechend der Apache Solr Query Syntax
+ Klausel kann ueber Hilfsfunktion <a target="_blank" href="solr_pkg.html#extract_facet(xmltype,varchar2)">BUILD_FILTER</a> erstellt werden.</DD>
+</DT>
+<DT>
+<B>Returns:</B>
+<DD>Apache Solr XML Antwortdokument als <a target="_blank" href="http://download.oracle.com/docs/cd/B28359_01/appdev.111/b28419/t_xml.htm#i1007914">XMLTYPE</a></DD>
+</DT>
+<DT>
+<B>Throws:</B>
+<DD>
+<CODE>31011</CODE> -
+               <a target="_blank" href="http://download.oracle.com/docs/cd/B28359_01/server.111/b28278/e29250.htm#sthref9535">XML parsing failed</a></DD>
+<DD>
+<CODE>29261-29276</CODE> -
+               <a target="_blank" href="http://download.oracle.com/docs/cd/B28359_01/server.111/b28278/e29250.htm#ORA-29250">UTL_HTTP Exceptions</a></DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="extract_results(xmltype)"></A>
+<H3>EXTRACT_RESULTS</H3>
+<PRE>
+  public SOLR_RESULT_ROW_LIST <B>EXTRACT_RESULTS</B>(resultset XMLTYPE)</PRE>
+<DL>
+<DD> Primaerschluesselliste aus Apache Solr XML Antwortdokument extrahieren
+ <pre> SELECT
+   *
+ FROM
+   TABLE(
+     SOLR_PKG.EXTRACT_RESULTS(
+       :XML_DOC
+       )
+   )</pre>
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>resultset</CODE> -
+              Apache Solr XML Antwortdokument als <a target="_blank" href="http://download.oracle.com/docs/cd/B28359_01/appdev.111/b28419/t_xml.htm#i1007914">XMLTYPE</a></DD>
+</DT>
+<DT>
+<B>Returns:</B>
+<DD>SOLR_RESULT_ROW_LIST absteigend nach Relevanz sortiert</DD>
+</DT>
+<DT>
+<B>Throws:</B>
+<DD>
+<CODE>31011</CODE> -
+               <a target="_blank" href="http://download.oracle.com/docs/cd/B28359_01/server.111/b28278/e29250.htm#sthref9535">XML parsing failed</a></DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="extract_facet(xmltype,varchar2)"></A>
+<H3>EXTRACT_FACET</H3>
+<PRE>
+  public SOLR_FACET_ROW_LIST <B>EXTRACT_FACET</B>(resultset XMLTYPE, <BR>                                           facet_field VARCHAR2)</PRE>
+<DL>
+<DD> Facet zu Dokumentenfeld aus Apache Solr XML Antwortdokument extrahieren
+ <pre> SELECT
+   *
+ FROM
+   TABLE(
+     SOLR_PKG.EXTRACT_FACET(
+       :XML_DOC
+     )
+   )</pre>
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Parameters:</B>
+<DD>
+<CODE>resultset</CODE> -
+              Apache Solr XML Antwortdokument als <a target="_blank" href="http://download.oracle.com/docs/cd/B28359_01/appdev.111/b28419/t_xml.htm#i1007914">XMLTYPE</a></DD>
+<DD>
+<CODE>facet_field</CODE> -
+              Facetiertes Dokumentenfeld</DD>
+</DT>
+<DT>
+<B>Returns:</B>
+<DD>SOLR_FACET_ROW_LIST absteigend nach Haeufigkeit sortiert</DD>
+</DT>
+<DT>
+<B>Throws:</B>
+<DD>
+<CODE>31011</CODE> -
+               <a target="_blank" href="http://download.oracle.com/docs/cd/B28359_01/server.111/b28278/e29250.htm#sthref9535">XML parsing failed</a></DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<TABLE CELLSPACING="0" CELLPADDING="1" WIDTH="100%" BORDER="0">
+<TR>
+<TD CLASS="NavBarRow1" COLSPAN="2">
+<TABLE CELLSPACING="3" CELLPADDING="0" BORDER="0">
+<TR VALIGN="top" ALIGN="center">
+<TD CLASS="NavBarRow1"><A HREF="summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="index-files/index-1.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A> &nbsp;</TD>
+</TR>
+</TABLE>
+</TD><TD rowspan="3" VALIGN="top" ALIGN="right"><EM><b>PL/Solr API Dokumentation</b></EM></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow2">
+     &nbsp;&nbsp;
+    </TD><TD CLASS="NavBarRow2"><FONT SIZE="-2"><A TARGET="_top" HREF="index.html"><B>FRAMES</B></A> &nbsp;&nbsp;
+      <A TARGET="_top" HREF="index-noframes.html"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+      SUMMARY:  <A HREF="#field_summary">FIELD</A> | <A HREF="#type_summary">TYPE</A> | <A HREF="#method_summary">METHOD</A></FONT></TD><TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+    DETAIL:  <A HREF="#field_detail">FIELD</A> | <A HREF="#type_detail">TYPE</A> | <A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<HR>
+</BODY>
+</HTML>

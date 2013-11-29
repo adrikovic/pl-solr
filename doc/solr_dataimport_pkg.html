@@ -1,0 +1,255 @@
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<TITLE>PL/Solr API Dokumentation</TITLE>
+<LINK TITLE="Style" HREF="stylesheet.css" TYPE="text/css" REL="stylesheet">
+</HEAD>
+<BODY BGCOLOR="white">
+<TABLE CELLSPACING="0" CELLPADDING="1" WIDTH="100%" BORDER="0">
+<TR>
+<TD CLASS="NavBarRow1" COLSPAN="2">
+<TABLE CELLSPACING="3" CELLPADDING="0" BORDER="0">
+<TR VALIGN="top" ALIGN="center">
+<TD CLASS="NavBarRow1"><A HREF="summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="index-files/index-1.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A> &nbsp;</TD>
+</TR>
+</TABLE>
+</TD><TD rowspan="3" VALIGN="top" ALIGN="right"><EM><b>PL/Solr API Dokumentation</b></EM></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow2">
+     &nbsp;&nbsp;
+    </TD><TD CLASS="NavBarRow2"><FONT SIZE="-2"><A TARGET="_top" HREF="index.html"><B>FRAMES</B></A> &nbsp;&nbsp;
+      <A TARGET="_top" HREF="index-noframes.html"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+      SUMMARY:  <A HREF="#field_summary">FIELD</A> | <A HREF="#type_summary">TYPE</A> | <A HREF="#method_summary">METHOD</A></FONT></TD><TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+    DETAIL:  <A HREF="#field_detail">FIELD</A> | <A HREF="#type_detail">TYPE</A> | <A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<HR>
+<H2>
+<FONT SIZE="-1"></FONT>
+<BR>
+    Package  SOLR_DATAIMPORT_PKG</H2>
+<P> Package kontrolliert <a target="_blank" href="http://wiki.apache.org/solr/DataImportHandler">Data Import Handler</a> und ermoeglicht eine Indexaktualisierung ueber Prozeduren.
+ <strong>Achtung:</strong> Package folgt nicht transaktionaler Semantik.<br />
+ Einsatz in Trigger moeglich, um eine zeitnahe Aktualisierung zu erreichen. <br />
+ Beispiel fuer Trigger
+ <pre> CREATE OR REPLACE TRIGGER ARTIKEL_TRG
+   AFTER INSERT OR UPDATE OR DELETE ON ARTIKEL
+ DECLARE
+   STATUS VARCHAR2(10);
+ BEGIN
+   SELECT
+     VALUE INTO STATUS
+   FROM
+     TABLE(SOLR_DATAIMPORT_PKG.STATUS)
+       WHERE KEY = 'Status';
+   IF STATUS = SOLR_DATAIMPORT_PKG.IDLE THEN
+     SOLR_DATAIMPORT_PKG.DELTA_IMPORT;
+   END IF;
+ END ARTIKEL_TRG</pre>
+</P>
+<HR>
+<P></P>
+<A NAME="field_summary"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="2"><FONT SIZE="+2"><B>Field Summary</B></FONT></TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;VARCHAR2(10)</CODE></FONT></TD><TD><CODE><B><A HREF="#BUSY">BUSY</A></B></CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      beschaeftigt
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;VARCHAR2(10)</CODE></FONT></TD><TD><CODE><B><A HREF="#IDLE">IDLE</A></B></CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      wartend
+</TD>
+</TR>
+</TABLE>
+<P></P>
+<A NAME="type_summary"></A><A NAME="method_summary"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="2"><FONT SIZE="+2"><B>Method Summary</B></FONT></TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#abort">ABORT</A></B>()</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       nur PL/SQL: ausfuehrendes Kommando abbrechen, sofern eines aktiv ist
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#delta_import">DELTA_IMPORT</A></B>()</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       nur PL/SQL: inkrementelle Aktualisierung starten
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;</CODE></FONT></TD><TD><CODE><B><A HREF="#full_import">FULL_IMPORT</A></B>()</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       nur PL/SQL: Indexneuerzeugung starten
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;SOLR_CORE_STATUS_LIST</CODE></FONT></TD><TD><CODE><B><A HREF="#status">STATUS</A></B>()</CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       Status des Data Import Handler abrufen<br />
+ Nutzbar in SQL und PL/SQL<br />
+ Ergebnis in SQL:
+ <pre> SELECT * FROM TABLE(SOLR_DATAIMPORT_PKG.STATUS);
+ 
+ KEY                               VALUE
+ --------------------------------- -----------------------------
+ Status                            busy
+ Command                           status
+ Import Response                   A command is still running...
+ Time Elapsed                      0:0:6.250
+ Total Requests made to DataSource 1
+ Total Rows Fetched                77000
+ Total Documents Processed         77000
+ Total Documents Skipped           0
+ Full Dump Started                 2011-07-09 03:43:41</pre>
+</TD>
+</TR>
+</TABLE>
+<P></P>
+<A NAME="field_detail"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="1"><FONT SIZE="+2"><B>Field Detail</B></FONT></TD>
+</TR>
+</TABLE>
+<A NAME="IDLE"></A>
+<H3>IDLE</H3>
+<PRE>
+  public VARCHAR2(10) <B>IDLE</B>
+</PRE>
+<DL>
+<DD>wartend
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="BUSY"></A>
+<H3>BUSY</H3>
+<PRE>
+  public VARCHAR2(10) <B>BUSY</B>
+</PRE>
+<DL>
+<DD>beschaeftigt
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="type_detail"></A><A NAME="method_detail"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="1"><FONT SIZE="+2"><B>Method Detail</B></FONT></TD>
+</TR>
+</TABLE>
+<A NAME="status"></A>
+<H3>STATUS</H3>
+<PRE>
+  public SOLR_CORE_STATUS_LIST <B>STATUS</B>()</PRE>
+<DL>
+<DD> Status des Data Import Handler abrufen<br />
+ Nutzbar in SQL und PL/SQL<br />
+ Ergebnis in SQL:
+ <pre> KEY                               VALUE
+ --------------------------------- -----------------------------
+ Status                            busy
+ Command                           status
+ Import Response                   A command is still running...
+ Time Elapsed                      0:0:6.250
+ Total Requests made to DataSource 1
+ Total Rows Fetched                77000
+ Total Documents Processed         77000
+ Total Documents Skipped           0
+ Full Dump Started                 2011-07-09 03:43:41</pre>
+</DD>
+<DD>
+<DL>
+<DT>
+<B>Returns:</B>
+<DD>SOLR_CORE_STATUS_LIST</DD>
+</DT>
+</DL>
+</DD>
+</DL>
+<HR>
+<A NAME="abort"></A>
+<H3>ABORT</H3>
+<PRE>
+  public  <B>ABORT</B>()</PRE>
+<DL>
+<DD> nur PL/SQL: ausfuehrendes Kommando abbrechen, sofern eines aktiv ist
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="full_import"></A>
+<H3>FULL_IMPORT</H3>
+<PRE>
+  public  <B>FULL_IMPORT</B>()</PRE>
+<DL>
+<DD> nur PL/SQL: Indexneuerzeugung starten
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="delta_import"></A>
+<H3>DELTA_IMPORT</H3>
+<PRE>
+  public  <B>DELTA_IMPORT</B>()</PRE>
+<DL>
+<DD> nur PL/SQL: inkrementelle Aktualisierung starten
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<TABLE CELLSPACING="0" CELLPADDING="1" WIDTH="100%" BORDER="0">
+<TR>
+<TD CLASS="NavBarRow1" COLSPAN="2">
+<TABLE CELLSPACING="3" CELLPADDING="0" BORDER="0">
+<TR VALIGN="top" ALIGN="center">
+<TD CLASS="NavBarRow1"><A HREF="summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="index-files/index-1.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A> &nbsp;</TD>
+</TR>
+</TABLE>
+</TD><TD rowspan="3" VALIGN="top" ALIGN="right"><EM><b>PL/Solr API Dokumentation</b></EM></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow2">
+     &nbsp;&nbsp;
+    </TD><TD CLASS="NavBarRow2"><FONT SIZE="-2"><A TARGET="_top" HREF="index.html"><B>FRAMES</B></A> &nbsp;&nbsp;
+      <A TARGET="_top" HREF="index-noframes.html"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+      SUMMARY:  <A HREF="#field_summary">FIELD</A> | <A HREF="#type_summary">TYPE</A> | <A HREF="#method_summary">METHOD</A></FONT></TD><TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+    DETAIL:  <A HREF="#field_detail">FIELD</A> | <A HREF="#type_detail">TYPE</A> | <A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<HR>
+</BODY>
+</HTML>

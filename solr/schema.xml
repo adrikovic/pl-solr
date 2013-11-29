@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="prototyp" version="1.3">
+  <types>
+    <fieldType name="string" class="solr.StrField"/>
+    <fieldType name="int" class="solr.TrieIntField"/>
+	
+    <fieldType name="text" class="solr.TextField">
+      <analyzer type="index">
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.StopFilterFactory" words="stopwords.txt"/>
+        <filter class="solr.PorterStemFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.PorterStemFilterFactory"/>
+      </analyzer>
+    </fieldType> 
+ </types>
+
+ <fields>  
+   <field name="artikel_id"           type="string" indexed="true" stored="true" required="true"/> 
+   <field name="artikel_name"         type="text"   indexed="true" stored="false"/>
+   <field name="artikel_hersteller"   type="string" indexed="true" stored="false"/>
+   <field name="artikel_packeinheit"  type="string" indexed="true" stored="false"/>
+   <field name="artikel_beschreibung" type="text"   indexed="true" stored="false"/>     
+ </fields>
+ 
+ <uniqueKey>artikel_id</uniqueKey>
+ <defaultSearchField>artikel_name</defaultSearchField>
+ <solrQueryParser defaultOperator="OR"/>
+</schema>

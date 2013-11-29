@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<TITLE>PL/Solr API Dokumentation</TITLE>
+<LINK TITLE="Style" HREF="stylesheet.css" TYPE="text/css" REL="stylesheet">
+</HEAD>
+<BODY BGCOLOR="white">
+<TABLE CELLSPACING="0" CELLPADDING="1" WIDTH="100%" BORDER="0">
+<TR>
+<TD CLASS="NavBarRow1" COLSPAN="2">
+<TABLE CELLSPACING="3" CELLPADDING="0" BORDER="0">
+<TR VALIGN="top" ALIGN="center">
+<TD CLASS="NavBarRow1"><A HREF="summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="index-files/index-1.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A> &nbsp;</TD>
+</TR>
+</TABLE>
+</TD><TD rowspan="3" VALIGN="top" ALIGN="right"><EM><b>PL/Solr API Dokumentation</b></EM></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow2">
+     &nbsp;&nbsp;
+    </TD><TD CLASS="NavBarRow2"><FONT SIZE="-2"><A TARGET="_top" HREF="index.html"><B>FRAMES</B></A> &nbsp;&nbsp;
+      <A TARGET="_top" HREF="index-noframes.html"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+      SUMMARY:  <A HREF="#field_summary">FIELD</A> | <A HREF="#type_summary">TYPE</A> | <A HREF="#method_summary">METHOD</A></FONT></TD><TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+    DETAIL:  <A HREF="#field_detail">FIELD</A> | <A HREF="#type_detail">TYPE</A> | <A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<HR>
+<H2>
+<FONT SIZE="-1"></FONT>
+<BR>
+    Package  SOLR_GLOBALS_PKG</H2>
+<P> Globale Konfiguration fuer den Einsatz in <a href="solr_pkg.html">SOLR_PKG</a> und <a href="solr_dataimport_pkg.html">SOLR_DATAIMPORT_PKG</a>.
+ ENDPOINT kann direkt verwendet werden, um einen HTTP Aufruf durchzufuehren.
+</P>
+<HR>
+<P></P>
+<A NAME="field_summary"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="2"><FONT SIZE="+2"><B>Field Summary</B></FONT></TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;VARCHAR2(100)</CODE></FONT></TD><TD><CODE><B><A HREF="#ENDPOINT">ENDPOINT</A></B></CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Endpunkt der Apache Solr Instanz
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;VARCHAR2(100)</CODE></FONT></TD><TD><CODE><B><A HREF="#HOST">HOST</A></B></CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Serverhost von Apache Solr
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;NUMBER</CODE></FONT></TD><TD><CODE><B><A HREF="#PORT">PORT</A></B></CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Serverport von Apache Solr
+</TD>
+</TR>
+<TR CLASS="TableRowColor">
+<TD WIDTH="1%" VALIGN="top" ALIGN="right"><FONT SIZE="-1"><CODE>&nbsp;VARCHAR2(100)</CODE></FONT></TD><TD><CODE><B><A HREF="#SERVLET">SERVLET</A></B></CODE>
+<BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      Apache Solr Servlet
+</TD>
+</TR>
+</TABLE>
+<P></P>
+<A NAME="type_summary"></A><A NAME="method_summary"></A><A NAME="field_detail"></A>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="3" BORDER="1">
+<TR CLASS="TableHeadingColor">
+<TD COLSPAN="1"><FONT SIZE="+2"><B>Field Detail</B></FONT></TD>
+</TR>
+</TABLE>
+<A NAME="HOST"></A>
+<H3>HOST</H3>
+<PRE>
+  public VARCHAR2(100) <B>HOST</B>
+</PRE>
+<DL>
+<DD>Serverhost von Apache Solr
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="PORT"></A>
+<H3>PORT</H3>
+<PRE>
+  public NUMBER <B>PORT</B>
+</PRE>
+<DL>
+<DD>Serverport von Apache Solr
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="SERVLET"></A>
+<H3>SERVLET</H3>
+<PRE>
+  public VARCHAR2(100) <B>SERVLET</B>
+</PRE>
+<DL>
+<DD>Apache Solr Servlet
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="ENDPOINT"></A>
+<H3>ENDPOINT</H3>
+<PRE>
+  public VARCHAR2(100) <B>ENDPOINT</B>
+</PRE>
+<DL>
+<DD>Endpunkt der Apache Solr Instanz
+</DD>
+<DD>
+<DL></DL>
+</DD>
+</DL>
+<HR>
+<A NAME="type_detail"></A><A NAME="method_detail"></A>
+<TABLE CELLSPACING="0" CELLPADDING="1" WIDTH="100%" BORDER="0">
+<TR>
+<TD CLASS="NavBarRow1" COLSPAN="2">
+<TABLE CELLSPACING="3" CELLPADDING="0" BORDER="0">
+<TR VALIGN="top" ALIGN="center">
+<TD CLASS="NavBarRow1"><A HREF="summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="deprecated-list.html"><FONT CLASS="NavBarFont1"><B>Deprecated</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="index-files/index-1.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A> &nbsp;</TD><TD CLASS="NavBarRow1"><A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A> &nbsp;</TD>
+</TR>
+</TABLE>
+</TD><TD rowspan="3" VALIGN="top" ALIGN="right"><EM><b>PL/Solr API Dokumentation</b></EM></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow2">
+     &nbsp;&nbsp;
+    </TD><TD CLASS="NavBarRow2"><FONT SIZE="-2"><A TARGET="_top" HREF="index.html"><B>FRAMES</B></A> &nbsp;&nbsp;
+      <A TARGET="_top" HREF="index-noframes.html"><B>NO FRAMES</B></A></FONT></TD>
+</TR>
+<TR>
+<TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+      SUMMARY:  <A HREF="#field_summary">FIELD</A> | <A HREF="#type_summary">TYPE</A> | <A HREF="#method_summary">METHOD</A></FONT></TD><TD CLASS="NavBarRow3" VALIGN="top"><FONT SIZE="-2">
+    DETAIL:  <A HREF="#field_detail">FIELD</A> | <A HREF="#type_detail">TYPE</A> | <A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<HR>
+</BODY>
+</HTML>

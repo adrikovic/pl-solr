@@ -1,0 +1,19 @@
+<dataConfig>
+ <dataSource type="JdbcDataSource" driver="oracle.jdbc.OracleDriver" url="jdbc:oracle:thin:@localhost:1521:sid" user="solr" password="solr"/>
+ <document>	
+  <entity
+   name="item"
+   query="SELECT artikel_id, artikel_name, artikel_hersteller, artikel_packeinheit FROM artikel"
+   deltaImportQuery="select * from artikel where artikel_id= '${dataimporter.delta.ARTIKEL_ID}'"
+   deltaQuery="select artikel_id from artikel where aktualisiert_am &gt; '${dataimporter.last_index_time}'"
+   deletedPkQuery="select artikel_id from artikel where geloescht = 1"
+  >
+   
+   <field column="ARTIKEL_ID" name="artikel_id" />
+   <field column="ARTIKEL_NAME" name="artikel_name" />
+   <field column="ARTIKEL_BESCHREIBUNG" name="artikel_beschreibung" />
+   <field column="ARTIKEL_HERSTELLER" name="artikel_hersteller" />
+   <field column="ARTIKEL_PACKEINHEIT" name="artikel_packeinheit" />
+  </entity>
+ </document>
+</dataConfig>
